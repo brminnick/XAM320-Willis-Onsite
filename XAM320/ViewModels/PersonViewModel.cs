@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Xamarin.Forms;
@@ -16,6 +17,7 @@ namespace XAM320
             LastName = "Doe"
         };
 
+        bool _isBusy;
         string _firstName, _lastName, _firstNameCharacterCount;
         ICommand _defaultNameButtonCommand, _doSomethingCommand;
 
@@ -30,7 +32,7 @@ namespace XAM320
         public string FirstName
         {
             get => _firstName;
-            set => SetProperty(value, ref _firstName, UpdateFirstNameCharacterCount);
+            set => SetProperty(value, ref _firstName, async () => await UpdateFirstNameCharacterCount());
         }
 
         public string LastName
@@ -43,6 +45,12 @@ namespace XAM320
         {
             get => _firstNameCharacterCount;
             set => SetProperty(value, ref _firstNameCharacterCount);
+        }
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => SetProperty(value, ref _isBusy);
         }
 
         void SetProperty<T>(T propertyValue, ref T backingStore, Action onChanged = null, [CallerMemberName]string propertyName = null)
@@ -60,10 +68,16 @@ namespace XAM320
             //Todo
         }
 
-        void UpdateFirstNameCharacterCount()
+        async Task UpdateFirstNameCharacterCount()
         {
+            IsBusy = true;
+
             var numberOfCharacters = FirstName.Length;
             FirstNameCharacterCount = numberOfCharacters.ToString();
+
+            await Task.Delay(5000);
+
+            IsBusy = false;
         }
 
         void ExecuteDefaultNameButtonCommand(string defaultFirstName)

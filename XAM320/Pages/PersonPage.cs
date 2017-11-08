@@ -11,6 +11,7 @@ namespace XAM320
         public PersonPage()
         {
             BindingContext = _viewModel;
+            this.SetBinding(IsBusyProperty, nameof(_viewModel.IsBusy));
 
             var firstNameEntry = new Entry
             {
